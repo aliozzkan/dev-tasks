@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <main>
       <div>
-        <h1>Hello World</h1>
+        <h1 className="text-2xl font-bold">Home</h1>
       </div>
 
       <Dialog>
@@ -36,9 +36,11 @@ export default function Home() {
               Create a new task and assign it to a user.
             </DialogDescription>
           </DialogHeader>
-          <TaskCreateForm onSuccess={() => {
-            document.getElementById("close-dialog")?.click();
-          }} />
+          <TaskCreateForm
+            onSuccess={() => {
+              document.getElementById("close-dialog")?.click();
+            }}
+          />
         </DialogContent>
       </Dialog>
     </main>
