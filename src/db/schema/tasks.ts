@@ -6,7 +6,8 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { users } from "./users";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
+import { relations } from "drizzle-orm";
 
 export const tasks = pgTable("task", {
   id: text("id")
@@ -21,5 +22,15 @@ export const tasks = pgTable("task", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const tasksRelations = relations(tasks, ({ one }) => ({
+  user: one(users, {
+    fields: [tasks.userId],
+    references: [users.id],
+  }),
+}));
+
 export const taskInsertSchema = createInsertSchema(tasks);
 export type TaskInsertType = typeof taskInsertSchema._type;
+
+export const taskUpdateSchema = createUpdateSchema(tasks);
+export type TaskUpdateType = typeof taskUpdateSchema._type;

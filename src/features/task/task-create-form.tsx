@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormField,
@@ -10,10 +9,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useForm } from "react-hook-form";
+import { useAddTaskMutation } from "@/services/task/task.api";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState } from "react";
+import QueryButton from "../common/query-button";
 
 const formSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
@@ -25,9 +25,7 @@ interface TaskCreateFormProps {
 }
 
 function TaskCreateForm(props: TaskCreateFormProps) {
-  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">(
-    "idle"
-  );
+  const [addTaskMutate, addTaskMutation] = useAddTaskMutation();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -38,29 +36,25 @@ function TaskCreateForm(props: TaskCreateFormProps) {
   });
 
   const onValid = async (values: z.infer<typeof formSchema>) => {
-    setStatus("loading");
-    try {
-      await fetch("/api/task", {
-        method: "POST",
-        body: JSON.stringify(values),
-      });
-      setStatus("done");
-    } catch (error) {
-      console.error("Error creating task:", error);
-      setStatus("error");
-    } finally {
-      setTimeout(() => {
-        setStatus("idle");
-        form.reset();
-        props.onSuccess();
-      }, 1000);
+    await addTaskMutate({
+      title: values.title,
+      description: values.description,
+      userId: "1",
+    }).unwrap();
+
+    if (addTaskMutation.isError) {
+      alert("error");
     }
+
+    setTimeout(() => {
+      props.onSuccess();
+    }, 1000);
   };
 
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onValid)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onValid)} className="space-y-8">
           <FormField
             name="title"
             control={form.control}
@@ -84,12 +78,13 @@ function TaskCreateForm(props: TaskCreateFormProps) {
             )}
           />
 
-          <Button className="w-full" size="lg">
-            {status === "loading" && "Creating..."}
-            {status === "done" && "Created!"}
-            {status === "error" && "Error!"}
-            {status === "idle" && "Create Task"}
-          </Button>
+          <QueryButton
+            queryStatus={addTaskMutation.status}
+            type="submit"
+            className="w-full"
+          >
+            Create
+          </QueryButton>
         </form>
       </Form>
     </div>

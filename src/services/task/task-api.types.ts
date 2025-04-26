@@ -3,3 +3,10 @@ export interface IAddTaskVariables {
   description: string;
   userId: string;
 }
+
+export interface IUpdateTaskVariables {
+  id: string;
+  title?: string;
+  description?: string;
+  status?: number;
+}

@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IAddTaskVariables } from "./task-api.types";
+import { IAddTaskVariables, IUpdateTaskVariables } from "./task-api.types";
+import { InferResultType } from "@/types/db.types";
 
 const taskApi = createApi({
   reducerPath: "taskApi",
@@ -14,12 +15,21 @@ const taskApi = createApi({
       }),
       invalidatesTags: ["TaskList"],
     }),
-    getTasks: builder.query<void, void>({
+    getTasks: builder.query<InferResultType<"tasks", { user: true }>[], void>({
       query: () => "/",
       providesTags: ["TaskList"],
+    }),
+    updateTask: builder.mutation<void, IUpdateTaskVariables>({
+      query: (variables) => ({
+        url: "/",
+        method: "PATCH",
+        body: variables,
+      }),
+      invalidatesTags: ["TaskList"],
     }),
   }),
 });
 
-export const { useAddTaskMutation, useGetTasksQuery } = taskApi;
+export const { useAddTaskMutation, useLazyGetTasksQuery, useGetTasksQuery, useUpdateTaskMutation } =
+  taskApi;
 export default taskApi;
