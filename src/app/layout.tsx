@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import StoreProvider from "@/components/providers/store-provider";
 
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,9 +31,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <StoreProvider>
-          <ThemeProvider>{children}</ThemeProvider>
-        </StoreProvider>
+        <NuqsAdapter>
+          <StoreProvider>
+            <ThemeProvider>{children}</ThemeProvider>
+          </StoreProvider>
+        </NuqsAdapter>
       </body>
     </html>
   );

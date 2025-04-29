@@ -8,6 +8,7 @@ import {
 import { users } from "./users";
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { relations } from "drizzle-orm";
+import { z } from "zod";
 
 export const tasks = pgTable("task", {
   id: text("id")
@@ -20,6 +21,7 @@ export const tasks = pgTable("task", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  dueDate: timestamp("due_date", { mode: "string" }),
 });
 
 export const tasksRelations = relations(tasks, ({ one }) => ({

@@ -2,9 +2,10 @@ import { TaskStatusEnum } from "@/enums/task-status.enum";
 import { useUpdateTaskMutation } from "@/services/task/task.api";
 import { InferResultType } from "@/types/db.types";
 import { DndContext } from "@dnd-kit/core";
+import { parseISO } from "date-fns";
+import { useEffect, useState } from "react";
 import DraggableCard from "./draggable-card";
 import DroppableColumn from "./droppable-column";
-import { useEffect, useState } from "react";
 
 interface TasksDndBoardProps {
   data: InferResultType<"tasks", { user: true }>[];
@@ -17,6 +18,12 @@ function TaskDndBoard(props: TasksDndBoardProps) {
   function renderTaskCards(status: TaskStatusEnum) {
     return tasksState
       .filter((task) => task.status === status)
+      .sort((a, b) => {
+        const aCreatedAt = parseISO(a.createdAt as unknown as string);
+        const bCreatedAt = parseISO(b.createdAt as unknown as string);
+
+        return bCreatedAt.getTime() - aCreatedAt.getTime();
+      })
       .map((task) => (
         <DraggableCard
           key={task.id}
@@ -29,7 +36,7 @@ function TaskDndBoard(props: TasksDndBoardProps) {
 
   useEffect(() => {
     setTasksState(props.data);
-  }, [props.data])
+  }, [props.data]);
 
   return (
     <div>
@@ -41,6 +48,8 @@ function TaskDndBoard(props: TasksDndBoardProps) {
           if (!event.over) return;
 
           const newStatus = +event.over?.id as TaskStatusEnum;
+
+          if (task.status === newStatus) return;
 
           const newTasksState = tasksState.map((task) => {
             if (task.id === event.active.id) {
@@ -61,6 +70,9 @@ function TaskDndBoard(props: TasksDndBoardProps) {
         }}
       >
         <div className="flex gap-10">
+          <DroppableColumn id={TaskStatusEnum.Idle.toString()} title="Backlog">
+            {renderTaskCards(TaskStatusEnum.Idle)}
+          </DroppableColumn>
           <DroppableColumn id={TaskStatusEnum.Todo.toString()} title="Todo">
             {renderTaskCards(TaskStatusEnum.Todo)}
           </DroppableColumn>

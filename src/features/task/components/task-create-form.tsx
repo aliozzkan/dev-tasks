@@ -1,5 +1,6 @@
 "use client";
 
+import { DatePicker } from "@/components/ui/datepicker";
 import {
   Form,
   FormField,
@@ -13,11 +14,12 @@ import { useAddTaskMutation } from "@/services/task/task.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import QueryButton from "../common/query-button";
+import QueryButton from "../../common/query-button";
 
 const formSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   description: z.string().min(1, { message: "Description is required" }),
+  dueDate: z.date().optional(),
 });
 
 interface TaskCreateFormProps {
@@ -40,15 +42,17 @@ function TaskCreateForm(props: TaskCreateFormProps) {
       title: values.title,
       description: values.description,
       userId: "1",
+      dueDate: values.dueDate?.toISOString(),
     }).unwrap();
 
     if (addTaskMutation.isError) {
+      console.log(addTaskMutation.error);
       alert("error");
     }
 
     setTimeout(() => {
       props.onSuccess();
-    }, 1000);
+    }, 500);
   };
 
   return (
@@ -61,7 +65,7 @@ function TaskCreateForm(props: TaskCreateFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Title</FormLabel>
-                <Input {...field} />
+                <Input {...field} className="h-10" />
                 <FormMessage />
               </FormItem>
             )}
@@ -72,7 +76,20 @@ function TaskCreateForm(props: TaskCreateFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Description</FormLabel>
-                <Textarea {...field} className="resize-none" />
+                <Textarea {...field} className="resize-none h-20" />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="dueDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Due Date</FormLabel>
+                <DatePicker {...field} />
+
                 <FormMessage />
               </FormItem>
             )}

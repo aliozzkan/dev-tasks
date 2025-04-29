@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TaskStatusEnum } from "@/enums/task-status.enum";
 import { useUpdateTaskMutation } from "@/services/task/task.api";
-import { InferResultType } from "@/types/db.types";
+import { TaskType } from "@/types/models.types";
 import { format } from "date-fns";
 import {
   ArrowDown,
@@ -24,13 +24,15 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import TaskStatusBadge from "./task-status-badge";
+import { useManagementActions } from "../hooks/use-management-state";
 
 interface TaskTableProps {
-  data: InferResultType<"tasks", { user: true }>[];
+  data: TaskType[];
 }
 
 function TaskTable(props: TaskTableProps) {
   const [updateTaskMutate] = useUpdateTaskMutation();
+  const { clickDetail } = useManagementActions();
 
   const handleStatusChange = async (taskId: string, status: TaskStatusEnum) => {
     await updateTaskMutate({
@@ -73,6 +75,18 @@ function TaskTable(props: TaskTableProps) {
         {
           accessorKey: "title",
           header: "Title",
+          cell: ({ row }) => {
+            const title = row.getValue("title") as string;
+            return (
+              <Button
+                variant="link"
+                className="text-left w-full justify-start px-0 text-foreground"
+                onClick={() => clickDetail(row.getValue("id"))}
+              >
+                {title}
+              </Button>
+            );
+          },
         },
         {
           accessorKey: "description",
@@ -124,6 +138,7 @@ function TaskTable(props: TaskTableProps) {
           sortDescFirst: true,
           sortingFn: "datetime",
           accessorKey: "createdAt",
+
           header: ({ column }) => {
             return (
               <Button

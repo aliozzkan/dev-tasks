@@ -1,7 +1,10 @@
+import { taskManagementReducer } from "@/features/task/slices/tasks-management.slice";
 import taskApi from "@/services/task/task.api";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
-const REDUCERS = {};
+const REDUCERS = {
+  taskManagement: taskManagementReducer,
+};
 
 const COMBINED_REDUCERS = combineReducers({
   ...REDUCERS,

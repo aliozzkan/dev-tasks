@@ -2,11 +2,13 @@ import { useGetTasksQuery } from "@/services/task/task.api";
 import TaskTable from "./task-table";
 import TaskDndBoard from "./task-dnd-board/task-dnd-board";
 
+export type ViewType = "table" | "kanban";
+
 interface TaskListViewProps {
-  view?: "table" | "kanban";
+  view?: ViewType;
 }
 
-function TaskListView({ view = "table" }: TaskListViewProps) {
+function TaskList({ view = "table" }: TaskListViewProps) {
   const tasksQuery = useGetTasksQuery();
 
   return (
@@ -23,4 +25,4 @@ function TaskListView({ view = "table" }: TaskListViewProps) {
   );
 }
 
-export default TaskListView;
+export default TaskList;
