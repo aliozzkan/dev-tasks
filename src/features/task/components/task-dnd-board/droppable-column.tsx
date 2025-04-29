@@ -18,7 +18,7 @@ function DroppableColumn(props: DroppableColumnProps) {
       <div
         ref={setNodeRef}
         className={cn(
-          "w-72 min-h-[500px] bg-muted rounded shadow-sm border border-border p-2",
+          "w-[calc(100vw-140px)] md:w-72 min-h-[500px] bg-muted rounded shadow-sm border border-border p-2",
           isOver && "border-primary"
         )}
       >

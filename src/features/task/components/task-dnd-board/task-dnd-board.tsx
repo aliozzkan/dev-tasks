@@ -39,7 +39,7 @@ function TaskDndBoard(props: TasksDndBoardProps) {
   }, [props.data]);
 
   return (
-    <div>
+    <div className="max-w-[calc(100vw-82px)] md:max-w-[calc(100vw-256px-82px)] overflow-x-scroll">
       <DndContext
         onDragEnd={async (event) => {
           const task = props.data.find((task) => task.id === event.active.id);
@@ -69,7 +69,7 @@ function TaskDndBoard(props: TasksDndBoardProps) {
           });
         }}
       >
-        <div className="flex gap-10">
+        <div className="flex gap-4 md:gap-10">
           <DroppableColumn id={TaskStatusEnum.Idle.toString()} title="Backlog">
             {renderTaskCards(TaskStatusEnum.Idle)}
           </DroppableColumn>
