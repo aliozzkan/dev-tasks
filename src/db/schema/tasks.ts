@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   integer,
   pgTable,
@@ -5,10 +6,8 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import { users } from "./users";
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
-import { relations } from "drizzle-orm";
-import { z } from "zod";
+import { users } from "./users";
 
 export const tasks = pgTable("task", {
   id: text("id")

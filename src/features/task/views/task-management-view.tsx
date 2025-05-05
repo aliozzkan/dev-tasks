@@ -45,6 +45,15 @@ function TaskManagementView() {
               {view === "table" && <CheckIcon className="w-4 h-4" />}
               Table
             </Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setView("calendar");
+              }}
+            >
+              {view === "calendar" && <CheckIcon className="w-4 h-4" />}
+              Calendar
+            </Button>
           </div>
 
           <TaskList view={view as ViewType} />

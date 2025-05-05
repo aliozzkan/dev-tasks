@@ -1,8 +1,9 @@
 import { useGetTasksQuery } from "@/services/task/task.api";
 import TaskTable from "./task-table";
 import TaskDndBoard from "./task-dnd-board/task-dnd-board";
+import TaskCalendar from "./task-calendar";
 
-export type ViewType = "table" | "kanban";
+export type ViewType = "table" | "kanban" | "calendar";
 
 interface TaskListViewProps {
   view?: ViewType;
@@ -21,6 +22,7 @@ function TaskList({ view = "table" }: TaskListViewProps) {
           )}
         </>
       )}
+      {view === "calendar" && <TaskCalendar data={tasksQuery.data ?? []} />}
     </div>
   );
 }

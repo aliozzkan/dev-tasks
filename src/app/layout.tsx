@@ -1,19 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import StoreProvider from "@/components/providers/store-provider";
+import { Poppins, Space_Mono } from "next/font/google";
 
+import StoreProvider from "@/components/providers/store-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import "./globals.css";
+
+import { cn } from "@/lib/utils";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const spaceMono = Space_Mono({
+  weight: ["400", "700"],
+  variable: "--font-space-mono",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const poppins = Poppins({
   subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-poppins",
 });
 
 export const metadata: Metadata = {
@@ -29,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={cn(spaceMono.className, poppins.className, "antialiased")}
       >
         <NuqsAdapter>
           <StoreProvider>

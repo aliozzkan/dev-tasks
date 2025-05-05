@@ -3,7 +3,7 @@ import { parseAsStringEnum, useQueryState } from "nuqs";
 export const useViewState = () =>
   useQueryState(
     "view",
-    parseAsStringEnum(["kanban", "table"]).withDefault("table")
+    parseAsStringEnum(["kanban", "table", "calendar"]).withDefault("table")
   );
 
 export const useTaskDetailIdState = () => useQueryState("task");
